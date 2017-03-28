@@ -24,7 +24,7 @@ passport.use(new LocalStrategy(function(username, password, done) {
    var user = {
             username: username,
             password: password,
-            key_values:[]
+            key_values:{}
         }
    if(!database[user.username]){
         database[user.username] = user; 
@@ -95,17 +95,16 @@ app.get('/logout', function(req, res) {
 app.put('/', function(req, res){
     if (!req.user) return res.send(401)
     else{
-        database[req.user.username].key_values.push({key: req.query.key, value: req.query.value})
+        database[req.user.username].key_values[req.query.key]= req.query.value;
         res.send(database[req.user.username].key_values);
     }
 })
 app.delete('/', function(req, res){
     if(!req.user) return res.send(401)
     else{
-       database[req.user.username].key_values = database[req.user.username].key_values.filter(function(keypair){
-           return req.query.key !== keypair.key;
-       })
-       res.send(database[req.user.username].key_values);
+        // delete object property
+        delete database[req.user.username].key_values[req.query.key];
+        res.send(database[req.user.username].key_values);
     }
 })
 // start the server listening
