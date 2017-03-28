@@ -21,15 +21,17 @@ var database = {}
 
 passport.use(new LocalStrategy(function(username, password, done) {
    console.log(username);
-   if(!database[username]){
-        database[username] = {
+   var user = {
             username: username,
             password: password,
             key_values:[]
         }
-        return done(null, database[username]);
+   if(!database[user.username]){
+        database[user.username] = user; 
    }
-  return done(null, false)
+    return done(null, database[username]);
+
+//   return done(null, false)
 }));              
         
     // var user = {
